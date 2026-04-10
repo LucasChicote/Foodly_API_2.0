@@ -42,7 +42,6 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Rotas públicas
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/produtos/**").permitAll()
@@ -50,13 +49,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/restaurantes/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/usuarios/cep/**").permitAll()
 
-                        // ADMIN
                         .requestMatchers(HttpMethod.GET, "/usuarios").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/categorias").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/categorias/**").hasAuthority("ROLE_ADMIN")
 
-                        // ADMIN ou RESTAURANT_OWNER
                         .requestMatchers(HttpMethod.POST, "/produtos").hasAnyAuthority("ROLE_ADMIN", "ROLE_RESTAURANT_OWNER")
                         .requestMatchers(HttpMethod.PUT, "/produtos/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RESTAURANT_OWNER")
                         .requestMatchers(HttpMethod.DELETE, "/produtos/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RESTAURANT_OWNER")
@@ -66,7 +63,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/pedidos/restaurante/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RESTAURANT_OWNER")
                         .requestMatchers(HttpMethod.PATCH, "/pedidos/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RESTAURANT_OWNER")
 
-                        // ADMIN ou CUSTOMER
                         .requestMatchers(HttpMethod.POST, "/pedidos").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
                         .requestMatchers(HttpMethod.GET, "/pedidos/meus").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
 
@@ -78,10 +74,17 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
+
+        config.setAllowedOrigins(List.of(
+                "http://localhost:4200",
+                "http://localhost:8081",
+                "http://10.0.2.2:8080"
+        ));
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
