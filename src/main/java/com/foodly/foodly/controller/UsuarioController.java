@@ -27,4 +27,10 @@ public class UsuarioController {
     public ResponseEntity<Endereco> buscarCep(@PathVariable String cep) {
         return ResponseEntity.ok(service.buscarCep(cep));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

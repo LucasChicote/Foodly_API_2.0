@@ -8,6 +8,8 @@ import com.foodly.foodly.model.Usuario;
 import com.foodly.foodly.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -53,5 +55,13 @@ public class UsuarioService {
 
     public Endereco buscarCep(String cep) {
         return viaCepClient.buscarCep(cep);
+    }
+
+    @Transactional
+    public void deletar(Long id) {
+        if (!repository.existsById(id)) {
+            throw new IllegalArgumentException("Usuário não encontrado: " + id);
+        }
+        repository.deleteById(id);
     }
 }

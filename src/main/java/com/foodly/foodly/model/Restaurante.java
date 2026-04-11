@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "restaurantes")
 @Getter
@@ -27,10 +29,14 @@ public class Restaurante {
     @Column(length = 100)
     private String categoria;
 
-    @Column(name = "imagem_url", length = 500)
+    @Lob
+    @Column(name = "imagem_url")
     private String imagemUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dono_id", nullable = false)
     private Usuario dono;
+
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Produto> produtos;
 }

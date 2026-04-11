@@ -31,7 +31,8 @@ public class Produto {
     @Column(nullable = false)
     private Double preco;
 
-    @Column(name = "imagem_url", length = 500)
+    @Lob
+    @Column(name = "imagem_url")
     private String imagemUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
