@@ -9,7 +9,9 @@ public record ProdutoResponseDTO(
         Double preco,
         String imagemUrl,
         String categoria,
-        String restaurante
+        Long categoriaId,
+        String restaurante,
+        Long restauranteId
 ) {
     public static ProdutoResponseDTO fromProduto(Produto produto) {
         return new ProdutoResponseDTO(
@@ -19,7 +21,9 @@ public record ProdutoResponseDTO(
                 produto.getPreco(),
                 produto.getImagemUrl(),
                 produto.getCategoria() != null ? produto.getCategoria().getNome() : null,
-                produto.getRestaurante() != null ? produto.getRestaurante().getNome() : null
+                produto.getCategoria() != null ? produto.getCategoria().getId() : null,
+                produto.getRestaurante() != null ? produto.getRestaurante().getNome() : null,
+                produto.getRestaurante() != null ? produto.getRestaurante().getId() : null
         );
     }
 }
