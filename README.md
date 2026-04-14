@@ -87,7 +87,7 @@ git clone https://github.com/LucasChicote/Foodly_API_2.0
 ### 2. Entrar na pasta do projeto
 
 ```bash
-cd Foodly_API
+cd Foodly_API_2.0
 ```
 
 ### 3. Executar a aplicação
