@@ -81,7 +81,7 @@ spring:
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/Foodly_API.git
+git clone https://github.com/LucasChicote/Foodly_API_2.0
 ```
 
 ### 2. Entrar na pasta do projeto
