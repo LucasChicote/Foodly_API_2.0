@@ -1,35 +1,38 @@
 # ==========================================
-# Estágio 1: Build (Compilação do Projeto)
+# Estágio 1: Build com Gradle
 # ==========================================
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+FROM eclipse-temurin:17-jdk-jammy AS build
 
-# Define o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copia o arquivo de configuração do Maven para aproveitar o cache de dependências
-COPY pom.xml .
+# Copia os arquivos do Gradle Wrapper primeiro (cache de layers)
+COPY gradlew .
+COPY gradle gradle
+RUN chmod +x gradlew
 
-# Baixa as dependências sem compilar o código (otimiza builds futuros)
-RUN mvn dependency:go-offline -B
+# Copia os arquivos de configuração do build
+COPY build.gradle .
+COPY settings.gradle .
 
-# Copia todo o código fonte do projeto
+# Baixa as dependências sem compilar (otimiza builds futuros)
+RUN ./gradlew dependencies --no-daemon || true
+
+# Copia o código fonte
 COPY src ./src
 
-# Executa o build gerando o arquivo .jar (ignora os testes para agilizar o deploy)
-RUN mvn clean package -DskipTests
+# Gera o .jar ignorando os testes
+RUN ./gradlew bootJar -x test --no-daemon
 
 # ==========================================
-# Estágio 2: Execução (Imagem Final Leve)
+# Estágio 2: Imagem final leve
 # ==========================================
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
-# Copia apenas o .jar gerado no estágio anterior
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/build/libs/*.jar app.jar
 
-# Expõe a porta padrão que o Spring Boot utiliza
 EXPOSE 8080
 
-# Comando para inicializar a API
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Render injeta $PORT — o Spring respeita via SERVER_PORT
+ENTRYPOINT ["java", "-jar", "-Dserver.port=${PORT:-8080}", "app.jar"]
