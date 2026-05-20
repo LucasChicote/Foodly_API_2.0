@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: rm559366
+    password: 190905
     driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:
