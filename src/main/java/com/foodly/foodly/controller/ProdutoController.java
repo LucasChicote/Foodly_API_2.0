@@ -23,6 +23,11 @@ public class ProdutoController {
         return ResponseEntity.ok(service.listarTodos());
     }
 
+    @GetMapping("/kits")
+    public List<ProdutoResponseDTO> listarKits() {
+        return service.listarKitsSustentaveis();
+    }
+
     @GetMapping("/categoria/{id}")
     public ResponseEntity<List<ProdutoResponseDTO>> listarPorCategoria(@PathVariable Long id) {
         return ResponseEntity.ok(service.listarPorCategoria(id));

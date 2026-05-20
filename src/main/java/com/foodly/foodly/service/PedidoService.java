@@ -8,6 +8,8 @@ import com.foodly.foodly.repository.RestauranteRepository;
 import com.foodly.foodly.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -105,5 +107,18 @@ public class PedidoService {
                 .stream()
                 .map(PedidoDTO.Response::fromPedido)
                 .toList();
+    }
+
+    @Transactional
+    public void criarKitSustentavel(Long produtoId, int horasValidade) {
+        Produto p = produtoRepository.findById(produtoId)
+                .orElseThrow();
+
+        p.setIsKitSustentavel(true);
+        p.setPrecoPromocional(p.getPreco() * 0.6); // 40% de desconto
+        p.setDataExpiracao(LocalDateTime.now().plusHours(horasValidade));
+        p.setCo2EconomizadoKg(2.5 * (p.getPreco() / 20)); // estimativa simples
+
+        produtoRepository.save(p);
     }
 }

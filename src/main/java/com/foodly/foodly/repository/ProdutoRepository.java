@@ -2,6 +2,10 @@ package com.foodly.foodly.repository;
 
 import com.foodly.foodly.model.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
@@ -9,4 +13,11 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> findByCategoriaId(Long categoriaId);
 
     List<Produto> findByRestauranteId(Long restauranteId);
+
+    List<Produto> findByIsKitSustentavelTrueOrderByDataExpiracaoAsc();
+
+    @Query("SELECT p FROM Produto p WHERE p.dataExpiracao IS NOT NULL AND p.dataExpiracao < :agora")
+    List<Produto> findKitsExpirados(@Param("agora") LocalDateTime agora);
+
+    List<Produto> findByIsKitSustentavelTrue();
 }
