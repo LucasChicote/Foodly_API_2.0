@@ -20,4 +20,7 @@ public class Categoria {
     @NotBlank(message = "Nome da categoria é obrigatório")
     @Column(nullable = false, unique = true, length = 100)
     private String nome;
+
+    @Column(nullable = false, length = 20)
+    private String tipo = "PRODUTO";
 }

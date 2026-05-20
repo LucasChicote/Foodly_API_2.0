@@ -23,6 +23,11 @@ public class CategoriaController {
         return ResponseEntity.ok(service.listar());
     }
 
+    @GetMapping("/produto")
+    public ResponseEntity<List<Categoria>> listarProduto() {
+        return ResponseEntity.ok(service.listarPorTipo("PRODUTO"));
+    }
+
     @PostMapping
     public ResponseEntity<Categoria> salvar(@RequestBody @Valid Categoria categoria) {
         return ResponseEntity.status(201).body(service.salvar(categoria));

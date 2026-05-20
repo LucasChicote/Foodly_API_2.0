@@ -17,8 +17,9 @@ public record ProdutoRequestDTO(
 
         String imagemUrl,
 
-        @NotNull(message = "Categoria é obrigatória")
         Long categoriaId,
+
+        String categoriaNome,
 
         @NotNull(message = "Restaurante é obrigatório")
         Long restauranteId
