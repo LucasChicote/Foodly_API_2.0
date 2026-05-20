@@ -1,0 +1,5 @@
+ALTER TABLE categorias ADD tipo VARCHAR2(20) DEFAULT 'PRODUTO';
+UPDATE categorias SET tipo = 'PRODUTO';
+ALTER TABLE categorias MODIFY tipo VARCHAR2(20) NOT NULL;
+
+COMMIT;

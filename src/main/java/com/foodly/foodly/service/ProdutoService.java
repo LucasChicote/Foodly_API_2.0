@@ -18,18 +18,29 @@ public class ProdutoService {
     private final ProdutoRepository produtoRepository;
     private final CategoriaRepository categoriaRepository;
     private final RestauranteRepository restauranteRepository;
+    private final CategoriaService categoriaService;
 
     public ProdutoService(ProdutoRepository produtoRepository,
                           CategoriaRepository categoriaRepository,
-                          RestauranteRepository restauranteRepository) {
+                          RestauranteRepository restauranteRepository,
+                          CategoriaService categoriaService) {
         this.produtoRepository = produtoRepository;
         this.categoriaRepository = categoriaRepository;
         this.restauranteRepository = restauranteRepository;
+        this.categoriaService = categoriaService;
     }
 
     public ProdutoResponseDTO salvar(ProdutoRequestDTO dto) {
-        Categoria categoria = categoriaRepository.findById(dto.categoriaId())
-                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada: " + dto.categoriaId()));
+        Categoria categoria;
+
+        if (dto.categoriaId() != null) {
+            categoria = categoriaRepository.findById(dto.categoriaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada: " + dto.categoriaId()));
+        } else if (dto.categoriaNome() != null && !dto.categoriaNome().isBlank()) {
+            categoria = categoriaService.buscarOuCriar(dto.categoriaNome(), "PRODUTO");
+        } else {
+            throw new IllegalArgumentException("Categoria é obrigatória");
+        }
 
         Restaurante restaurante = restauranteRepository.findById(dto.restauranteId())
                 .orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado: " + dto.restauranteId()));
