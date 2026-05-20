@@ -16,17 +16,26 @@ public class KitsScheduler {
 
     private final ProdutoRepository produtoRepository;
 
-    @Scheduled(fixedRate = 1800000)
+    @Scheduled(fixedRate = 1800000, initialDelay = 60000)
     @Transactional
     public void processarKitsExpirados() {
-        LocalDateTime agora = LocalDateTime.now();
-        List<Produto> expirados = produtoRepository.findKitsExpirados(agora);
+        try {
+            LocalDateTime agora = LocalDateTime.now();
+            List<Produto> expirados = produtoRepository.findKitsExpirados(agora);
 
-        for (Produto p : expirados) {
-            p.setPrecoPromocional(null);
-            p.setIsKitSustentavel(false);
-            p.setDataExpiracao(null);
+            if (expirados != null && !expirados.isEmpty()) {
+                for (Produto p : expirados) {
+                    p.setPrecoPromocional(null);
+                    p.setIsKitSustentavel(false);
+                    p.setDataExpiracao(null);
+                }
+                produtoRepository.saveAll(expirados);
+                System.out.println("[KitsScheduler] " + expirados.size() + " kits expirados atualizados.");
+            } else {
+                System.out.println("[KitsScheduler] Nenhum kit expirado encontrado.");
+            }
+        } catch (Exception e) {
+            System.err.println("[KitsScheduler] Erro: " + e.getMessage());
         }
-        produtoRepository.saveAll(expirados);
     }
 }

@@ -14,10 +14,8 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     List<Produto> findByRestauranteId(Long restauranteId);
 
-    List<Produto> findByIsKitSustentavelTrueOrderByDataExpiracaoAsc();
-
     @Query("SELECT p FROM Produto p WHERE p.dataExpiracao IS NOT NULL AND p.dataExpiracao < :agora")
     List<Produto> findKitsExpirados(@Param("agora") LocalDateTime agora);
 
-    List<Produto> findByIsKitSustentavelTrue();
+    List<Produto> findByIsKitSustentavelTrueOrderByDataExpiracaoAsc();
 }
