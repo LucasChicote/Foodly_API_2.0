@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "produtos")
 @Getter
@@ -42,4 +44,10 @@ public class Produto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurante_id", nullable = false)
     private Restaurante restaurante;
+
+    private Double precoPromocional;
+
+    private Boolean isKitSustentavel = false;
+
+    private LocalDateTime dataExpiracao;
 }
