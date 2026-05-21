@@ -7,4 +7,6 @@ import java.util.List;
 public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
 
     List<Restaurante> findByDonoId(Long donoId);
+
+    List<Restaurante> findByNomeContainingIgnoreCase(String termo);
 }

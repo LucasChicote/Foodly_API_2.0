@@ -6,6 +6,7 @@ import com.foodly.foodly.model.Usuario;
 import com.foodly.foodly.repository.RestauranteRepository;
 import com.foodly.foodly.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -46,6 +47,13 @@ public class RestauranteService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
         return restauranteRepository.findByDonoId(dono.getId())
+                .stream()
+                .map(RestauranteDTO.Response::fromRestaurante)
+                .toList();
+    }
+
+    public List<RestauranteDTO.Response> buscarPorNome(String termo) {
+        return restauranteRepository.findByNomeContainingIgnoreCase(termo)
                 .stream()
                 .map(RestauranteDTO.Response::fromRestaurante)
                 .toList();

@@ -83,4 +83,11 @@ public class ProdutoService {
         }
         produtoRepository.deleteById(id);
     }
+
+    public List<ProdutoResponseDTO> buscarPorNomeOuDescricao(String termo) {
+        return produtoRepository.buscarPorNomeOuDescricao(termo)
+                .stream()
+                .map(ProdutoResponseDTO::fromProduto)
+                .toList();
+    }
 }
