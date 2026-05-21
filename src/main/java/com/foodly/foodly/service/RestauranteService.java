@@ -50,12 +50,4 @@ public class RestauranteService {
                 .map(RestauranteDTO.Response::fromRestaurante)
                 .toList();
     }
-
-    public List<RestauranteDTO.Response> buscarPorNome(String termo) {
-        return restauranteRepository.findAll().stream()
-                .filter(r -> r.getNome().toLowerCase().contains(termo.toLowerCase()) ||
-                        (r.getDescricao() != null && r.getDescricao().toLowerCase().contains(termo.toLowerCase())))
-                .map(RestauranteDTO.Response::fromRestaurante)
-                .toList();
-    }
 }

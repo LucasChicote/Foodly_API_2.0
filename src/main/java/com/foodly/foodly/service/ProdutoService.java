@@ -70,21 +70,6 @@ public class ProdutoService {
                 .toList();
     }
 
-    public List<ProdutoResponseDTO> listarKitsSustentaveis() {
-        return produtoRepository.findByIsKitSustentavelTrueOrderByDataExpiracaoAsc()
-                .stream()
-                .map(ProdutoResponseDTO::fromProduto)
-                .toList();
-    }
-
-    public List<ProdutoResponseDTO> buscarPorNomeOuDescricao(String termo) {
-        return produtoRepository.findAll().stream()
-                .filter(p -> p.getNome().toLowerCase().contains(termo.toLowerCase()) ||
-                        (p.getDescricao() != null && p.getDescricao().toLowerCase().contains(termo.toLowerCase())))
-                .map(ProdutoResponseDTO::fromProduto)
-                .toList();
-    }
-
     public List<ProdutoResponseDTO> listarPorRestaurante(Long restauranteId) {
         return produtoRepository.findByRestauranteId(restauranteId)
                 .stream()

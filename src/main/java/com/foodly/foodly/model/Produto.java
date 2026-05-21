@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "produtos")
@@ -32,9 +31,6 @@ public class Produto {
     @Column(nullable = false)
     private Double preco;
 
-    @Column(name = "preco_promocional")
-    private Double precoPromocional;
-
     @Lob
     @Column(name = "imagem_url")
     private String imagemUrl;
@@ -46,13 +42,4 @@ public class Produto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurante_id", nullable = false)
     private Restaurante restaurante;
-
-    @Column(name = "data_expiracao")
-    private LocalDateTime dataExpiracao;
-
-    @Column(name = "is_kit_sustentavel")
-    private Boolean isKitSustentavel = false;
-
-    @Column(name = "co2_economizado_kg")
-    private Double co2EconomizadoKg = 0.0;
 }
