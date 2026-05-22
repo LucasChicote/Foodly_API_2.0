@@ -38,7 +38,6 @@ public class ProdutoController {
         return ResponseEntity.status(201).body(service.salvar(dto));
     }
 
-    // === ADICIONADO PARA COMPLETAR O CRUD ===
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid ProdutoRequestDTO dto) {
         return ResponseEntity.ok(service.atualizar(id, dto));
