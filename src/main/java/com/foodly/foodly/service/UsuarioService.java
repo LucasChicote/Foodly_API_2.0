@@ -3,12 +3,14 @@ package com.foodly.foodly.service;
 import com.foodly.foodly.client.ViaCepClient;
 import com.foodly.foodly.dto.CadastroRequestDTO;
 import com.foodly.foodly.dto.UsuarioResponseDTO;
+import com.foodly.foodly.dto.BrasilApiCepDTO;
 import com.foodly.foodly.model.Endereco;
 import com.foodly.foodly.model.Usuario;
 import com.foodly.foodly.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final ViaCepClient viaCepClient;
     private final PasswordEncoder passwordEncoder;
+    private final RestClient restClient;
 
     public UsuarioService(UsuarioRepository repository,
                           ViaCepClient viaCepClient,
@@ -25,6 +28,7 @@ public class UsuarioService {
         this.repository = repository;
         this.viaCepClient = viaCepClient;
         this.passwordEncoder = passwordEncoder;
+        this.restClient = RestClient.create("https://brasilapi.com.br/api");
     }
 
     public UsuarioResponseDTO cadastrar(CadastroRequestDTO dto) {
@@ -32,7 +36,7 @@ public class UsuarioService {
             throw new IllegalArgumentException("E-mail já cadastrado: " + dto.email());
         }
 
-        Endereco endereco = viaCepClient.buscarCep(dto.cep());
+        Endereco endereco = buscarCep(dto.cep());
 
         Usuario usuario = new Usuario();
         usuario.setNome(dto.nome());
@@ -54,7 +58,27 @@ public class UsuarioService {
     }
 
     public Endereco buscarCep(String cep) {
-        return viaCepClient.buscarCep(cep);
+        try {
+            String cepLimpo = cep.replaceAll("\\D", "");
+            BrasilApiCepDTO response = restClient.get()
+                    .uri("/cep/v1/{cep}", cepLimpo)
+                    .retrieve()
+                    .body(BrasilApiCepDTO.class);
+
+            Endereco endereco = new Endereco();
+            if (response != null) {
+                endereco.setCep(response.cep());
+                endereco.setLogradouro(response.street());
+                endereco.setBairro(response.neighborhood());
+            }
+            return endereco;
+        } catch (Exception e) {
+            try {
+                return viaCepClient.buscarCep(cep);
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("Erro ao buscar o CEP informado em nenhum dos serviços");
+            }
+        }
     }
 
     @Transactional
