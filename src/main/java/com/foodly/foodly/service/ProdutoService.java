@@ -90,4 +90,32 @@ public class ProdutoService {
                 .map(ProdutoResponseDTO::fromProduto)
                 .toList();
     }
+
+    public ProdutoResponseDTO atualizar(Long id, ProdutoRequestDTO dto) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado com o ID: " + id));
+
+        produto.setNome(dto.nome());
+        produto.setDescricao(dto.descricao());
+        produto.setPreco(dto.preco());
+        produto.setImagemUrl(dto.imagemUrl());
+
+        Categoria categoria;
+        if (dto.categoriaId() != null) {
+            categoria = categoriaRepository.findById(dto.categoriaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada: " + dto.categoriaId()));
+            produto.setCategoria(categoria);
+        } else if (dto.categoriaNome() != null && !dto.categoriaNome().isBlank()) {
+            categoria = categoriaService.buscarOuCriar(dto.categoriaNome(), "PRODUTO");
+            produto.setCategoria(categoria);
+        }
+
+        if (dto.restauranteId() != null) {
+            Restaurante restaurante = restauranteRepository.findById(dto.restauranteId())
+                    .orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado: " + dto.restauranteId()));
+            produto.setRestaurante(restaurante);
+        }
+
+        return ProdutoResponseDTO.fromProduto(produtoRepository.save(produto));
+    }
 }
