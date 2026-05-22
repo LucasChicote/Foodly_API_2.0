@@ -32,7 +32,7 @@ public class UsuarioService {
             throw new IllegalArgumentException("E-mail já cadastrado: " + dto.email());
         }
 
-        Endereco endereco = buscarCep(dto.cep());
+        Endereco endereco = viaCepClient.buscarCep(dto.cep());
 
         Usuario usuario = new Usuario();
         usuario.setNome(dto.nome());
@@ -54,16 +54,7 @@ public class UsuarioService {
     }
 
     public Endereco buscarCep(String cep) {
-        try {
-            return viaCepClient.buscarCep(cep);
-        } catch (Exception e) {
-            System.out.println("LOG: ViaCEP bloqueado ou fora do ar na nuvem. Gerando dados de teste.");
-
-            Endereco mock = new Endereco();
-            mock.setLogradouro("Rua de Teste (ViaCEP Bloqueado no Render)");
-            mock.setBairro("Bairro de Teste");
-            return mock;
-        }
+        return viaCepClient.buscarCep(cep);
     }
 
     @Transactional
