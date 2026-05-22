@@ -37,11 +37,6 @@ public class ProdutoController {
     public ResponseEntity<ProdutoResponseDTO> salvar(@RequestBody @Valid ProdutoRequestDTO dto) {
         return ResponseEntity.status(201).body(service.salvar(dto));
     }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid ProdutoRequestDTO dto) {
-        return ResponseEntity.ok(service.atualizar(id, dto));
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
